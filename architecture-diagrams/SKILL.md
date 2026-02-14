@@ -51,24 +51,35 @@ echo "Skill ready"
 ## Quick Start
 
 ```bash
-# 1. Navigate to skill folder
-cd <path-to>/architecture-diagrams/
+# 1. Navigate to your project directory
+cd ~/projects/my-project/
 
-# 2. Verify setup
-if [ ! -d ".venv" ]; then ./scripts/setup.sh; fi
+# 2. Set skill path for convenience
+SKILL_DIR=~/.claude-wa/.claude/skills/architecture-diagrams
 
-# 3. Activate venv
-source .venv/bin/activate
+# 3. Verify setup
+if [ ! -d "$SKILL_DIR/.venv" ]; then cd "$SKILL_DIR" && ./scripts/setup.sh && cd -; fi
 
-# 4. Create a new diagram script (copy template)
-cp src/templates/basic-template.py src/examples/my-diagram.py
+# 4. Activate venv
+source "$SKILL_DIR/.venv/bin/activate"
 
-# 5. Edit the script (import nodes, define topology, connect)
+# 5. Create a diagram script in your project
+cat > my-diagram.py << 'EOF'
+from diagrams import Diagram, Cluster
+from diagrams.aws.compute import EC2
+from diagrams.aws.network import ELB
 
-# 6. Generate PNG
-python scripts/generate.py src/examples/my-diagram.py
+with Diagram("My Architecture", show=False):
+    lb = ELB("Load Balancer")
+    with Cluster("Web Tier"):
+        web = [EC2("Web 1"), EC2("Web 2")]
+    lb >> web
+EOF
 
-# Output: output/png/my-diagram.png
+# 6. Generate PNG (output goes to ./output/png/ in current directory)
+python "$SKILL_DIR/scripts/generate.py" my-diagram.py
+
+# Output: ~/projects/my-project/output/png/my-diagram.png
 ```
 
 ## File Structure
@@ -80,7 +91,7 @@ architecture-diagrams/        <-- Skill root (portable)
   .venv/                      # Python virtual environment (created by setup.sh)
   scripts/
     setup.sh                  # Creates .venv and installs deps
-    generate.py               # Runs diagram script, outputs to output/png/
+    generate.py               # Runs diagram script, outputs to cwd/output/png/
   src/
     templates/                # Starter templates — copy these
       basic-template.py       # Minimal template with TODOs
@@ -88,9 +99,39 @@ architecture-diagrams/        <-- Skill root (portable)
       cisco-network.py        # Network topology with routers, switches, firewall
       aws-architecture.py     # AWS cloud architecture with VPC, ALB, RDS
       kubernetes-cluster.py   # K8s cluster with namespaces, services, monitoring
-  output/png/                 # Generated diagram images
-  docs/                       # Additional documentation
+  docs/
+    icon-reference.md         # Complete catalog of all 2600+ available icons
 ```
+
+## Output Path Behavior
+
+Diagrams are generated in `./output/png/` **relative to your current working directory** (not the skill directory). This means output appears in your project folder:
+
+```bash
+# From your project directory
+cd ~/projects/my-project/
+python <skill>/scripts/generate.py diagram.py
+# Output: ~/projects/my-project/output/png/diagram.png
+
+# Custom output directory
+python <skill>/scripts/generate.py diagram.py --output-dir ./diagrams/
+# Output: ~/projects/my-project/diagrams/diagram.png
+
+# Absolute path
+python <skill>/scripts/generate.py diagram.py --output-dir /tmp/diagrams/
+# Output: /tmp/diagrams/diagram.png
+```
+
+## Icon Reference
+
+A comprehensive catalog of **all 2600+ available icons** is available at:
+
+**`docs/icon-reference.md`**
+
+Organized by provider (AWS, Azure, GCP, K8s, OnPrem, etc.) with:
+- Category groupings
+- Class names and import paths
+- 17 providers covering cloud, on-premise, SaaS, programming, and more
 
 ## Core Concepts
 
@@ -348,20 +389,28 @@ with Diagram("Title", outformat=["png", "svg", "pdf"]): ...
 ## Generate Script Usage
 
 ```bash
-# Activate venv first
-source .venv/bin/activate
+# Set skill path
+SKILL=~/.claude-wa/.claude/skills/architecture-diagrams
 
-# Generate from example
-python scripts/generate.py src/examples/cisco-network.py
+# Activate venv first
+source "$SKILL/.venv/bin/activate"
+
+# Generate from example (output in ./output/png/)
+python "$SKILL/scripts/generate.py" "$SKILL/src/examples/cisco-network.py"
 
 # Custom output name
-python scripts/generate.py src/examples/cisco-network.py --name my-network
+python "$SKILL/scripts/generate.py" "$SKILL/src/examples/cisco-network.py" --name my-network
 
 # SVG format
-python scripts/generate.py src/examples/aws-architecture.py --outformat svg
+python "$SKILL/scripts/generate.py" "$SKILL/src/examples/aws-architecture.py" --outformat svg
 
 # Custom output directory
-python scripts/generate.py src/examples/aws-architecture.py --output-dir /tmp/diagrams/
+python "$SKILL/scripts/generate.py" "$SKILL/src/examples/aws-architecture.py" --output-dir ./my-diagrams/
+
+# Generate in a project directory
+cd ~/projects/my-project/
+python "$SKILL/scripts/generate.py" my-diagram.py
+# Output: ~/projects/my-project/output/png/my-diagram.png
 ```
 
 ## Common Diagram Patterns
@@ -388,7 +437,7 @@ Layout: `LR`. Use `diagrams.onprem.ci` and `diagrams.onprem.cd`. Linear flow wit
 | `ModuleNotFoundError: diagrams` | Activate venv first: `source .venv/bin/activate` |
 | `ExecutableNotFound: dot` | Install graphviz: `sudo apt install graphviz` |
 | Diagram opens in viewer | Set `show=False` in Diagram() |
-| File saved in wrong directory | The script uses `cwd` for output — use `generate.py` to control |
+| File saved in wrong directory | Output goes to `cwd/output/png/` — run from your project directory, or use `--output-dir` |
 | Import error for provider class | Check exact class name at diagrams.mingrammer.com/docs/nodes/ |
 | Cluttered edges overlapping | Use `"splines": "ortho"` or `"concentrate": "true"` in graph_attr |
 | Nodes too close together | Increase `nodesep` and `ranksep` in graph_attr |

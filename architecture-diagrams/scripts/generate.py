@@ -2,29 +2,43 @@
 """
 Architecture Diagrams - Generator Script
 
-Executes a Python diagram script and moves the output PNG to output/png/.
+Executes a Python diagram script and outputs to the current working directory.
+
+Output goes to ./output/png/ relative to where this script is invoked (not the
+skill directory), so diagrams appear in your project folder. Use --output-dir
+to customize.
 
 Usage:
     python scripts/generate.py src/examples/cisco-network.py
     python scripts/generate.py src/examples/cisco-network.py --outformat svg
     python scripts/generate.py src/examples/cisco-network.py --name custom-name
+    python scripts/generate.py src/examples/cisco-network.py --output-dir /tmp/diagrams/
+
+Examples (from a project directory):
+    cd ~/projects/my-project
+    python ~/.claude-wa/.claude/skills/architecture-diagrams/scripts/generate.py diagram.py
+    # Output: ~/projects/my-project/output/png/diagram.png
 """
 
 import argparse
 import os
-import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate architecture diagram from Python script")
+    parser = argparse.ArgumentParser(
+        description="Generate architecture diagram from Python script",
+        epilog="Output defaults to ./output/png/ relative to the current working directory."
+    )
     parser.add_argument("script", help="Path to the Python diagram script")
     parser.add_argument("--outformat", default="png", choices=["png", "jpg", "svg", "pdf", "dot"],
                         help="Output format (default: png)")
     parser.add_argument("--name", help="Custom output filename (without extension)")
-    parser.add_argument("--output-dir", help="Custom output directory (default: output/png/)")
+    parser.add_argument("--output-dir",
+                        help="Custom output directory (default: ./output/png/ relative to cwd)")
     args = parser.parse_args()
 
     script_path = Path(args.script).resolve()
@@ -32,9 +46,12 @@ def main():
         print(f"ERROR: Script not found: {script_path}")
         sys.exit(1)
 
-    # Determine skill root directory
-    skill_dir = Path(__file__).resolve().parent.parent
-    output_dir = Path(args.output_dir) if args.output_dir else skill_dir / "output" / "png"
+    # Output directory: custom > ./output/png/ relative to current working directory
+    if args.output_dir:
+        output_dir = Path(args.output_dir).resolve()
+    else:
+        output_dir = Path.cwd() / "output" / "png"
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Run the diagram script from the output directory so diagrams lib writes there
@@ -75,7 +92,6 @@ def main():
     for ext in extensions:
         for f in output_dir.glob(f"*.{ext}"):
             # Only include recently created files (within last 30 seconds)
-            import time
             if f.stat().st_mtime > time.time() - 30:
                 generated.append(f)
 
@@ -83,7 +99,7 @@ def main():
         print(f"\n✓ Generated {len(generated)} file(s):")
         for f in sorted(generated):
             size_kb = f.stat().st_size / 1024
-            print(f"  {f.name} ({size_kb:.1f} KB)")
+            print(f"  {f} ({size_kb:.1f} KB)")
     else:
         print("\nWARNING: No output files detected. The diagram script may need adjustment.")
         print("Check that the Diagram context manager is used correctly.")
