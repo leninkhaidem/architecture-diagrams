@@ -100,7 +100,17 @@ architecture-diagrams/        <-- Skill root (portable)
       aws-architecture.py     # AWS cloud architecture with VPC, ALB, RDS
       kubernetes-cluster.py   # K8s cluster with namespaces, services, monitoring
   docs/
-    icon-reference.md         # Complete catalog of all 2600+ available icons
+    icon-reference.md         # Index with top icons + navigation (load this first)
+    icons/                    # Provider-specific icon catalogs (load on demand)
+      generic.md              # Generic infrastructure (26 icons)
+      aws.md                  # Amazon Web Services (562 icons)
+      azure.md                # Microsoft Azure (810 icons)
+      gcp.md                  # Google Cloud Platform (144 icons)
+      kubernetes.md           # Kubernetes (69 icons)
+      onprem.md               # On-Premise tools (211 icons)
+      saas.md                 # SaaS providers (42 icons)
+      programming.md          # Languages & frameworks (81 icons)
+      cloud-providers.md      # Other clouds: Elastic, Firebase, DigitalOcean, IBM, OCI, OpenStack, Outscale, Alibaba, GIS (689 icons)
 ```
 
 ## Output Path Behavior
@@ -122,16 +132,24 @@ python <skill>/scripts/generate.py diagram.py --output-dir /tmp/diagrams/
 # Output: /tmp/diagrams/diagram.png
 ```
 
-## Icon Reference
+## Icon Reference (Progressive Disclosure)
 
-A comprehensive catalog of **all 2600+ available icons** is available at:
+**2634 icons** across 17 providers, organized for efficient context loading:
 
-**`docs/icon-reference.md`**
+1. **Start with `docs/icon-reference.md`** — Main index (~130 lines) with navigation table, top 30 most-used icons, and quick-start imports
+2. **Load provider files on demand** from `docs/icons/` — Only load the specific provider file you need (e.g., `docs/icons/aws.md` for AWS icons)
 
-Organized by provider (AWS, Azure, GCP, K8s, OnPrem, etc.) with:
-- Category groupings
-- Class names and import paths
-- 17 providers covering cloud, on-premise, SaaS, programming, and more
+| Provider File | Icons | When to Load |
+|--------------|-------|-------------|
+| `icons/generic.md` | 26 | Network devices, OS, compute, storage |
+| `icons/aws.md` | 562 | AWS cloud architecture |
+| `icons/azure.md` | 810 | Azure cloud architecture |
+| `icons/gcp.md` | 144 | GCP architecture |
+| `icons/kubernetes.md` | 69 | K8s clusters, pods, services |
+| `icons/onprem.md` | 211 | Self-hosted infra, databases, CI/CD |
+| `icons/saas.md` | 42 | SaaS providers |
+| `icons/programming.md` | 81 | Languages, frameworks |
+| `icons/cloud-providers.md` | 689 | Elastic, Firebase, DigitalOcean, IBM, OCI, OpenStack, Outscale, Alibaba, GIS |
 
 ## Core Concepts
 
