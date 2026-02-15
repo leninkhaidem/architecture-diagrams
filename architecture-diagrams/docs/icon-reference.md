@@ -14,13 +14,20 @@ Complete catalog of all available icons in the Diagrams Python library.
 |----------|-------|------|----------|
 | [Generic](icons/generic.md) | 26 | `icons/generic.md` | Network devices, OS, compute, storage, virtualization |
 | [AWS](icons/aws.md) | 562 | `icons/aws.md` | Amazon Web Services cloud architecture |
-| [Azure](icons/azure.md) | 810 | `icons/azure.md` | Microsoft Azure cloud architecture |
+| **Azure** | **810** | *Split across 3 files:* | Microsoft Azure cloud architecture |
+| ↳ [Compute & Network](icons/azure-compute-network.md) | ~400 | `icons/azure-compute-network.md` | Compute, Network, Database, Storage |
+| ↳ [App & DevOps](icons/azure-app-devops.md) | ~240 | `icons/azure-app-devops.md` | App Services, DevOps, Identity, Integration, IoT |
+| ↳ [Web & Security](icons/azure-web-security.md) | ~170 | `icons/azure-web-security.md` | Management, Security, Web Services |
 | [GCP](icons/gcp.md) | 144 | `icons/gcp.md` | Google Cloud Platform architecture |
 | [Kubernetes](icons/kubernetes.md) | 69 | `icons/kubernetes.md` | K8s clusters, pods, services, storage |
 | [On-Premise](icons/onprem.md) | 211 | `icons/onprem.md` | Self-hosted infra, databases, CI/CD, monitoring |
 | [SaaS](icons/saas.md) | 42 | `icons/saas.md` | Chat, identity, CDN, social, logging |
 | [Programming](icons/programming.md) | 81 | `icons/programming.md` | Languages, frameworks, runtimes |
-| [Other Clouds](icons/cloud-providers.md) | 689 | `icons/cloud-providers.md` | Elastic, Firebase, DigitalOcean, IBM, OCI, OpenStack, Outscale, Alibaba, GIS |
+| **Other Clouds** | **689** | *Split across 4 files:* | Other cloud providers |
+| ↳ [Elastic & Firebase](icons/elastic-firebase.md) | ~109 | `icons/elastic-firebase.md` | Elastic Stack, Firebase services |
+| ↳ [DigitalOcean & IBM](icons/digitalocean-ibm.md) | ~309 | `icons/digitalocean-ibm.md` | DigitalOcean, IBM Cloud |
+| ↳ [Oracle & OpenStack](icons/oracle-openstack.md) | ~415 | `icons/oracle-openstack.md` | Oracle OCI, OpenStack |
+| ↳ [Outscale & Misc](icons/outscale-alibaba-misc.md) | ~220 | `icons/outscale-alibaba-misc.md` | Outscale, Alibaba, GIS, Custom, C4 |
 
 ---
 

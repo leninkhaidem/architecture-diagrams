@@ -101,16 +101,21 @@ architecture-diagrams/        <-- Skill root (portable)
       kubernetes-cluster.py   # K8s cluster with namespaces, services, monitoring
   docs/
     icon-reference.md         # Index with top icons + navigation (load this first)
-    icons/                    # Provider-specific icon catalogs (load on demand)
+    icons/                    # Provider-specific icon catalogs (load on demand, all ≤450 lines)
       generic.md              # Generic infrastructure (26 icons)
       aws.md                  # Amazon Web Services (562 icons)
-      azure.md                # Microsoft Azure (810 icons)
+      azure-compute-network.md # Azure: Compute, Network, Database, Storage (~400 icons)
+      azure-app-devops.md     # Azure: App Services, DevOps, Identity, Integration, IoT (~240 icons)
+      azure-web-security.md   # Azure: Management, Security, Web Services (~170 icons)
       gcp.md                  # Google Cloud Platform (144 icons)
       kubernetes.md           # Kubernetes (69 icons)
       onprem.md               # On-Premise tools (211 icons)
       saas.md                 # SaaS providers (42 icons)
       programming.md          # Languages & frameworks (81 icons)
-      cloud-providers.md      # Other clouds: Elastic, Firebase, DigitalOcean, IBM, OCI, OpenStack, Outscale, Alibaba, GIS (689 icons)
+      elastic-firebase.md     # Elastic Stack, Firebase (~109 icons)
+      digitalocean-ibm.md     # DigitalOcean, IBM Cloud (~309 icons)
+      oracle-openstack.md     # Oracle OCI, OpenStack (~415 icons)
+      outscale-alibaba-misc.md # Outscale, Alibaba, GIS, Custom, C4 (~220 icons)
 ```
 
 ## Output Path Behavior
@@ -143,13 +148,20 @@ python <skill>/scripts/generate.py diagram.py --output-dir /tmp/diagrams/
 |--------------|-------|-------------|
 | `icons/generic.md` | 26 | Network devices, OS, compute, storage |
 | `icons/aws.md` | 562 | AWS cloud architecture |
-| `icons/azure.md` | 810 | Azure cloud architecture |
+| **Azure (split):** | **810** | **Microsoft Azure - load as needed** |
+| `icons/azure-compute-network.md` | ~400 | Azure compute, network, database, storage |
+| `icons/azure-app-devops.md` | ~240 | Azure app services, DevOps, identity, IoT |
+| `icons/azure-web-security.md` | ~170 | Azure management, security, web |
 | `icons/gcp.md` | 144 | GCP architecture |
 | `icons/kubernetes.md` | 69 | K8s clusters, pods, services |
 | `icons/onprem.md` | 211 | Self-hosted infra, databases, CI/CD |
 | `icons/saas.md` | 42 | SaaS providers |
 | `icons/programming.md` | 81 | Languages, frameworks |
-| `icons/cloud-providers.md` | 689 | Elastic, Firebase, DigitalOcean, IBM, OCI, OpenStack, Outscale, Alibaba, GIS |
+| **Other Clouds (split):** | **689** | **Other cloud providers - load as needed** |
+| `icons/elastic-firebase.md` | ~109 | Elastic Stack, Firebase |
+| `icons/digitalocean-ibm.md` | ~309 | DigitalOcean, IBM Cloud |
+| `icons/oracle-openstack.md` | ~415 | Oracle OCI, OpenStack |
+| `icons/outscale-alibaba-misc.md` | ~220 | Outscale, Alibaba, GIS, Custom, C4 |
 
 ## Core Concepts
 
