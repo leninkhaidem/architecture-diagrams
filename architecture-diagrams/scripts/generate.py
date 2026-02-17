@@ -27,6 +27,25 @@ import sys
 import time
 from pathlib import Path
 
+# Skill directory (where this script lives)
+SKILL_DIR = Path(__file__).resolve().parent.parent
+
+def get_venv_python():
+    """Return the Python executable from the skill's .venv, activating it if needed."""
+    venv_python = SKILL_DIR / ".venv" / "bin" / "python"
+    if venv_python.exists():
+        return str(venv_python)
+    # Fallback: try to set up the venv
+    setup_sh = SKILL_DIR / "scripts" / "setup.sh"
+    if setup_sh.exists():
+        print(f"⚙️  .venv not found. Running setup.sh...")
+        subprocess.run(["bash", str(setup_sh)], check=True, cwd=str(SKILL_DIR))
+    if venv_python.exists():
+        return str(venv_python)
+    # Last resort: use current Python
+    print("WARNING: .venv not found. Using system Python (diagrams may not be installed).")
+    return sys.executable
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -66,9 +85,13 @@ def main():
     print(f"Generating diagram from: {script_path.name}")
     print(f"Output directory: {output_dir}")
 
+    # Use venv Python to ensure diagrams library is available
+    python_exec = get_venv_python()
+    print(f"Using Python: {python_exec}")
+
     # Execute the script with cwd set to output dir
     result = subprocess.run(
-        [sys.executable, str(script_path)],
+        [python_exec, str(script_path)],
         cwd=str(output_dir),
         env=env,
         capture_output=True,
